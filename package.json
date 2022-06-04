@@ -1,7 +1,7 @@
 {
-  "name": "football-data-provider",
+  "name": "vavacars-crawler",
   "version": "1.1.1",
-  "description": "football-data-provider is data provider for SportsERP project",
+  "description": "vavacars crawler",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
