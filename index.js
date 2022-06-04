@@ -29,26 +29,39 @@ fs.readFile('./lastCars.json', (err, data) => {
         console.error(err);
     } else {
         var oldCarList = JSON.parse(data);
-        var oldCarIdList = oldCarList.map(car => car.id)
 
-        fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, err => {
-        }); // sıfırla
+        let bookedCars = oldCarList.filter(car => { // rezerve edilmiş araçlar
+            return car['status'] === 2;
+        });
+        let notBookedCars = oldCarList.filter(car => { // mevcut araçlar
+            return car['status'] === 1;
+        });
+
+        var bookedCarIdList = bookedCars.map(car => car.id);
+        var notBookedCarIdList = notBookedCars.map(car => car.id);
+        var oldCarIdList = notBookedCarIdList.concat(bookedCarIdList);
+
+        // fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, err => {}); // sıfırla
 
         var carList = [];
         setTimeout(() => {
             getCarList($params, function (newCarList) {
-                let newCarIdList = newCarList.map(car => car.id)
-
-                let diff = newCarIdList.filter(x => !oldCarIdList.includes(x));
-
-                console.log(diff);
+                for (const [index, newCar] of Object.entries(newCarList)) {
+                    if (!oldCarIdList.includes(newCar.id)) {
+                        console.log('newCar:', newCar.id,createLink(newCar))
+                    }
+                }
 
                 carList = carList.concat(newCarList)
-                fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'});
+                // fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'});
             });
         }, 3000)
     }
 });
+
+const createLink = (car) => {
+    return 'https://tr.vava.cars/buy/cars/' + car.make + '/' + car.model + '/' + car.id
+}
 
 getCarList = ($params, cb) => {
     axios.post($url, $params)
