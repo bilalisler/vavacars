@@ -38,7 +38,7 @@ let $params = {
 
 fs.readFile('./lastCars.json', (err, data) => {
     if (err) {
-        console.error(err);
+        console.error(err,'file read error');
     } else {
         var oldCarList = JSON.parse(data);
 
@@ -53,7 +53,10 @@ fs.readFile('./lastCars.json', (err, data) => {
         var notBookedCarIdList = notBookedCars.map(car => car.id);
         var oldCarIdList = notBookedCarIdList.concat(bookedCarIdList);
 
-        fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, err => {}); // sıfırla
+        fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, (err) => {
+            if (err)
+                console.log(err,'write file error1');
+        }); // sıfırla
 
         var carList = [];
         setTimeout(() => {
@@ -66,7 +69,10 @@ fs.readFile('./lastCars.json', (err, data) => {
                 }
 
                 carList = carList.concat(newCarList)
-                fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'});
+                fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'}, (err) => {
+                    if (err)
+                        console.log(err,'write file error2');
+                });
             });
         }, 3000)
     }
@@ -87,7 +93,7 @@ getCarList = ($params, cb) => {
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error,'get car list error');
         });
 }
 
@@ -101,7 +107,7 @@ const sendEmail = (carLink) => {
     }
     transporter.sendMail(options, (error, info) =>{
         if(error){
-            console.log(error,'Error')
+            console.log(error,'send mail error')
         }
     })
 }
