@@ -60,6 +60,7 @@ fs.readFile('./lastCars.json', (err, data) => {
             getCarList($params, function (newCarList) {
                 for (const [index, newCar] of Object.entries(newCarList)) {
                     if (!oldCarIdList.includes(newCar.id)) {
+                        console.log(createLink(newCar));
                         sendEmail(createLink(newCar));
                     }
                 }
