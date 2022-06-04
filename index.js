@@ -1,9 +1,10 @@
 const axios = require('axios');
+const fs = require('fs');
 
 let url = 'https://app-vava-dtc-search-tr-prod.azurewebsites.net/search'
 let params = {
     "pageNum": 1,
-    "pageSize": 12,
+    "pageSize": 20,
     "filters": {
         "priceTo": 850000,
         "mileageTo": 90000,
@@ -23,18 +24,36 @@ let params = {
     }
 }
 
-axios.post(url, params)
-    .then(function (response) {
-        let totalCount = response.data.totalCount;
+fs.readFile('./last_cars.json', (err, data) => {
+    if (err) {
+        console.error(err);
+    } else {
+        var oldCarList = JSON.parse(data);
 
-        let cars = response.data.items;
+        getCarList(1, function (carList) {
 
-        for(const [index,car] of Object.entries(cars)){
-            console.log(car);
-        }
+            for (const [index, car] of Object.entries(carList)) {
 
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+            }
 
+            oldCarList = oldCarList.concat(carList)
+            fs.writeFileSync('./last_cars.json', JSON.stringify(oldCarList));
+        });
+    }
+});
+
+getCarList = ($page, cb) => {
+    params['page'] = $page;
+    axios.post(url, params)
+        .then(function (response) {
+            let totalCount = response.data.totalCount;
+            cb(response.data.items)
+            if (totalCount > params['pageSize'] * $page) {
+                $page++;
+                getCarList($page, cb);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
