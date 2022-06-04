@@ -29,14 +29,14 @@ fs.readFile('./last_cars.json', (err, data) => {
         console.error(err);
     } else {
         var oldCarList = JSON.parse(data);
+        var oldCarIdList = oldCarList.map(car => car.id)
 
-        getCarList(1, function (carList) {
+        getCarList(1, function (newCarList) {
+            let newCarIdList = newCarList.map(car => car.id)
 
-            for (const [index, car] of Object.entries(carList)) {
+            console.log(newCarIdList.filter(x => !oldCarIdList.includes(x)))
 
-            }
-
-            oldCarList = oldCarList.concat(carList)
+            oldCarList = oldCarList.concat(newCarList)
             fs.writeFileSync('./last_cars.json', JSON.stringify(oldCarList));
         });
     }
