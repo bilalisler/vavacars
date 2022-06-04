@@ -1,8 +1,8 @@
 const axios = require('axios');
 const fs = require('fs');
 
-let url = 'https://app-vava-dtc-search-tr-prod.azurewebsites.net/search'
-let params = {
+let $url = 'https://app-vava-dtc-search-tr-prod.azurewebsites.net/search'
+let $params = {
     "pageNum": 1,
     "pageSize": 20,
     "filters": {
@@ -24,33 +24,40 @@ let params = {
     }
 }
 
-fs.readFile('./last_cars.json', (err, data) => {
+fs.readFile('./lastCars.json', (err, data) => {
     if (err) {
         console.error(err);
     } else {
         var oldCarList = JSON.parse(data);
         var oldCarIdList = oldCarList.map(car => car.id)
 
-        getCarList(1, function (newCarList) {
-            let newCarIdList = newCarList.map(car => car.id)
+        fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, err => {
+        }); // sıfırla
 
-            console.log(newCarIdList.filter(x => !oldCarIdList.includes(x)))
+        var carList = [];
+        setTimeout(() => {
+            getCarList($params, function (newCarList) {
+                let newCarIdList = newCarList.map(car => car.id)
 
-            oldCarList = oldCarList.concat(newCarList)
-            fs.writeFileSync('./last_cars.json', JSON.stringify(oldCarList));
-        });
+                let diff = newCarIdList.filter(x => !oldCarIdList.includes(x));
+
+                console.log(diff);
+
+                carList = carList.concat(newCarList)
+                fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'});
+            });
+        }, 3000)
     }
 });
 
-getCarList = ($page, cb) => {
-    params['page'] = $page;
-    axios.post(url, params)
+getCarList = ($params, cb) => {
+    axios.post($url, $params)
         .then(function (response) {
             let totalCount = response.data.totalCount;
             cb(response.data.items)
-            if (totalCount > params['pageSize'] * $page) {
-                $page++;
-                getCarList($page, cb);
+            if (totalCount > $params['pageSize'] * $params['pageNum']) {
+                $params['pageNum']++;
+                getCarList($params, cb);
             }
         })
         .catch(function (error) {
