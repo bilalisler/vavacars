@@ -3,11 +3,9 @@ const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 let transporter = nodemailer.createTransport({
-    // host: 'smtp.mailtrap.io',
-    // port: 2525,
     service: 'hotmail',
     auth: {
-        user: "crawlervava@outlook.com",
+        user: "crawlervava2@outlook.com",
         pass: "Test123456789-"
     }
 })
@@ -36,24 +34,18 @@ let $params = {
     }
 }
 
-fs.readFile('./lastCars.json', (err, data) => {
+var filePath = '/Users/bilal/Desktop/vava2/lastCars.json';
+
+console.log('crawler started...',(new Date()).toLocaleTimeString());
+
+fs.readFile(filePath, (err, data) => {
     if (err) {
         console.error(err,'file read error');
     } else {
         var oldCarList = JSON.parse(data);
+        var oldCarIdList = oldCarList.map(car => car.id);
 
-        let bookedCars = oldCarList.filter(car => { // rezerve edilmiş araçlar
-            return car['status'] === 2;
-        });
-        let notBookedCars = oldCarList.filter(car => { // mevcut araçlar
-            return car['status'] === 1;
-        });
-
-        var bookedCarIdList = bookedCars.map(car => car.id);
-        var notBookedCarIdList = notBookedCars.map(car => car.id);
-        var oldCarIdList = notBookedCarIdList.concat(bookedCarIdList);
-
-        fs.writeFile('./lastCars.json', JSON.stringify([]), {flag: 'w'}, (err) => {
+        fs.writeFile(filePath, JSON.stringify([]), {flag: 'w'}, (err) => {
             if (err)
                 console.log(err,'write file error1');
         }); // sıfırla
@@ -69,7 +61,7 @@ fs.readFile('./lastCars.json', (err, data) => {
                 }
 
                 carList = carList.concat(newCarList)
-                fs.writeFileSync('./lastCars.json', JSON.stringify(carList), {flag: 'w'}, (err) => {
+                fs.writeFileSync(filePath, JSON.stringify(carList), {flag: 'w'}, (err) => {
                     if (err)
                         console.log(err,'write file error2');
                 });
@@ -105,9 +97,9 @@ const sendEmail = (carLink) => {
         subject: "New Car in VAVA",
         text: "Please check url: " + carLink
     }
-    transporter.sendMail(options, (error, info) =>{
-        if(error){
-            console.log(error,'send mail error')
-        }
-    })
+    // transporter.sendMail(options, (error, info) =>{
+    //     if(error){
+    //         console.log(error,'send mail error')
+    //     }
+    // })
 }
