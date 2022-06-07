@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 let transporter = nodemailer.createTransport({
     service: 'hotmail',
     auth: {
-        user: "crawlervava2@outlook.com",
+        user: "crawlervava@outlook.com",
         pass: "Test123456789-"
     }
 })
@@ -17,7 +17,7 @@ let $params = {
     "pageSize": 20,
     "filters": {
         "priceTo": 850000,
-        "mileageTo": 90000,
+        "mileageTo": 40000,
         "yearFrom": 2018,
         "transmission": ["Otomatik"],
         "fuelType": [],
@@ -34,7 +34,7 @@ let $params = {
     }
 }
 
-var filePath = '/Users/bilal/Desktop/vava2/lastCars.json';
+var filePath = './lastCars.json';
 
 console.log('crawler started...',(new Date()).toLocaleTimeString());
 
@@ -55,7 +55,7 @@ fs.readFile(filePath, (err, data) => {
             getCarList($params, function (newCarList) {
                 for (const [index, newCar] of Object.entries(newCarList)) {
                     if (!oldCarIdList.includes(newCar.id)) {
-                        console.log(createLink(newCar));
+                        console.log(createLink(newCar),' - ', newCar.status == 2 ? 'rezerve':'yeni');
                         sendEmail(createLink(newCar));
                     }
                 }
