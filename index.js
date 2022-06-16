@@ -36,34 +36,50 @@ let $params = {
 
 var filePath = './lastCars.json';
 
-console.log('crawler started...',(new Date()).toLocaleTimeString());
+console.log('crawler started...', (new Date()).toLocaleTimeString());
 
 fs.readFile(filePath, (err, data) => {
     if (err) {
-        console.error(err,'file read error');
+        console.error(err, 'file read error');
     } else {
         var oldCarList = JSON.parse(data);
         var oldCarIdList = oldCarList.map(car => car.id);
 
+        var carStatusMap = {};
+        for (const [index, item] of Object.entries(oldCarList)) {
+            carStatusMap[item.id] = item.status;
+        }
+
         fs.writeFile(filePath, JSON.stringify([]), {flag: 'w'}, (err) => {
             if (err)
-                console.log(err,'write file error1');
+                console.log(err, 'write file error1');
         }); // sıfırla
 
         var carList = [];
         setTimeout(() => {
             getCarList($params, function (newCarList) {
+                let getStatus = function (status) {
+                    return status == 2 ? 'rezerve' : 'yeni'
+                };
                 for (const [index, newCar] of Object.entries(newCarList)) {
-                    if (!oldCarIdList.includes(newCar.id)) {
-                        console.log(createLink(newCar),' - ', newCar.status == 2 ? 'rezerve':'yeni');
-                        sendEmail(createLink(newCar));
+                    let $link = createLink(newCar);
+                    let $newStatus = newCar.status;
+                    let $id = newCar.id;
+
+                    if ($id in carStatusMap) {
+                        let $oldStatus = carStatusMap[$id];
+                        if($oldStatus !== $newStatus){
+                            console.log($link + ' - ' + getStatus($oldStatus) + "'den " + getStatus($newStatus) + "'a çekilmiştir");
+                        }
+                    }else if (!oldCarIdList.includes($id) && newCar.status == 1 ) {
+                        console.log($link + ' -  yeni');
                     }
                 }
 
                 carList = carList.concat(newCarList)
                 fs.writeFileSync(filePath, JSON.stringify(carList), {flag: 'w'}, (err) => {
                     if (err)
-                        console.log(err,'write file error2');
+                        console.log(err, 'write file error2');
                 });
             });
         }, 3000)
@@ -85,14 +101,14 @@ getCarList = ($params, cb) => {
             }
         })
         .catch(function (error) {
-            console.log(error,'get car list error');
+            console.log(error, 'get car list error');
         });
 }
 
 
 const sendEmail = (carLink) => {
     const options = {
-        from : "crawlervava@outlook.com",
+        from: "crawlervava@outlook.com",
         to: "mercan_shark@windowslive.com",
         subject: "New Car in VAVA",
         text: "Please check url: " + carLink
