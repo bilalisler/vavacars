@@ -51,7 +51,9 @@ startCrawler = () => {
 
             var carList = [];
             setTimeout(() => {
+                var messageContent = '';
                 getCarList($params, function (newCarList) {
+
                     let getStatus = function (status) {
                         return status == 2 ? 'rezerve' : 'yeni'
                     };
@@ -62,11 +64,13 @@ startCrawler = () => {
 
                         if ($id in carStatusMap) {
                             let $oldStatus = carStatusMap[$id];
-                            if($oldStatus !== $newStatus){
+                            if ($oldStatus !== $newStatus) {
+                                messageContent += $link + ' - ' + getStatus($oldStatus) + "'den " + getStatus($newStatus) + "'a çekilmiştir" + '\n';
                                 console.log($link + ' - ' + getStatus($oldStatus) + "'den " + getStatus($newStatus) + "'a çekilmiştir");
                             }
-                        }else if (!oldCarIdList.includes($id) && newCar.status == 1 ) {
-                            console.log($link + ' -  yeni');
+                        } else if (!oldCarIdList.includes($id) && newCar.status == 1) {
+                            messageContent += $link + ' -  yeni' + '\n';
+                            console.log($link + ' -"  yeni');
                         }
                     }
 
@@ -76,6 +80,8 @@ startCrawler = () => {
                             console.log(err, 'write file error2');
                     });
                 });
+
+                sendEmail(messageContent)
             }, 3000)
         }
     });
@@ -96,29 +102,29 @@ getCarList = ($params, cb) => {
         });
 }
 
-const sendEmail = (carLink) => {
+const sendEmail = (messageContent) => {
     let transporter = nodemailer.createTransport({
         service: 'hotmail',
         auth: {
-            user: "crawlervava@outlook.com",
+            user: "vavacarnew@outlook.com",
             pass: "Test123456789-"
         }
     })
     const options = {
-        from: "crawlervava@outlook.com",
+        from: "vavacarnew@outlook.com",
         to: "mercan_shark@windowslive.com",
-        subject: "New Car in VAVA",
-        text: "Please check url: " + carLink
+        subject: "New Car List in VAVA",
+        text: "Please check urls: \n" + messageContent
     }
-    // transporter.sendMail(options, (error, info) =>{
-    //     if(error){
-    //         console.log(error,'send mail error')
-    //     }
-    // })
+    transporter.sendMail(options, (error, info) => {
+        if (error) {
+            console.log(error, 'send mail error')
+        }
+    })
 }
 
 console.log('crawler started...', (new Date()).toLocaleTimeString());
-cron.schedule('* * * * *', function() {
+cron.schedule('*/5 * * * *', function () {
     console.log('crawling...', (new Date()).toLocaleTimeString());
     startCrawler()
 });
