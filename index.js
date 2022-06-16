@@ -119,7 +119,6 @@ const sendEmail = (carLink) => {
 
 console.log('crawler started...', (new Date()).toLocaleTimeString());
 cron.schedule('* * * * *', function() {
-    console.log('crawling started...', (new Date()).toLocaleTimeString());
+    console.log('crawling...', (new Date()).toLocaleTimeString());
     startCrawler()
-    console.log('crawling finished...', (new Date()).toLocaleTimeString());
 });
