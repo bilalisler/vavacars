@@ -34,7 +34,8 @@ let $params = {
     }
 }
 
-var filePath = './lastCars.json';
+
+var filePath = __dirname + '/lastCars.json';
 
 console.log('crawler started...', (new Date()).toLocaleTimeString());
 
