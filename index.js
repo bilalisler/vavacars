@@ -7,6 +7,9 @@ startCrawler = () => {
     const createLink = (car) => {
         return 'https://tr.vava.cars/buy/cars/' + car.make + '/' + car.model + '/' + car.id
     }
+    let getStatus = function (status) {
+        return status == 2 ? 'rezerve' : 'yeni'
+    };
 
     let $params = {
         "pageNum": 1,
@@ -54,9 +57,6 @@ startCrawler = () => {
                 var messageContent = '';
                 getCarList($params, function (newCarList) {
 
-                    let getStatus = function (status) {
-                        return status == 2 ? 'rezerve' : 'yeni'
-                    };
                     for (const [index, newCar] of Object.entries(newCarList)) {
                         let $link = createLink(newCar);
                         let $newStatus = newCar.status;
@@ -66,11 +66,9 @@ startCrawler = () => {
                             let $oldStatus = carStatusMap[$id];
                             if ($oldStatus !== $newStatus) {
                                 messageContent += $link + ' - ' + getStatus($oldStatus) + "'den " + getStatus($newStatus) + "'a çekilmiştir" + '\n';
-                                console.log($link + ' - ' + getStatus($oldStatus) + "'den " + getStatus($newStatus) + "'a çekilmiştir");
                             }
                         } else if (!oldCarIdList.includes($id) && newCar.status == 1) {
                             messageContent += $link + ' -  yeni' + '\n';
-                            console.log($link + ' -"  yeni');
                         }
                     }
 
@@ -81,7 +79,10 @@ startCrawler = () => {
                     });
                 });
 
-                sendEmail(messageContent)
+                console.log('messageContent: ',messageContent)
+                if(messageContent){
+                    // sendEmail(messageContent)
+                }
             }, 3000)
         }
     });
@@ -124,7 +125,7 @@ const sendEmail = (messageContent) => {
 }
 
 console.log('crawler started...', (new Date()).toLocaleTimeString());
-cron.schedule('*/5 * * * *', function () {
+cron.schedule('* * * * *', function () {
     console.log('crawling...', (new Date()).toLocaleTimeString());
     startCrawler()
 });
