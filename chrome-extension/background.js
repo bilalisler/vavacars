@@ -4,7 +4,7 @@ var notifyListById = {}
 let second = 1000;
 let minute = second * 60;
 
-setTimeout(function () {
+setInterval(function () {
     fetch('http://localhost:3000/')           //api for the get request
         .then(response => response.json())
         .then(messageList => {
@@ -24,7 +24,7 @@ setTimeout(function () {
                 }
             }
         });
-}, 5 * second);
+}, 5 * minute);
 
 chrome.notifications.onClicked.addListener((notifyId) => { // bildirim'e tıklandığında
     let carLink = notifyListById[notifyId];

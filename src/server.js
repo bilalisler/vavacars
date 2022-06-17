@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-var notificationPath = __dirname + '/notifications.json';
+var notificationPath = __dirname + '/../notifications.json';
 
 app.get('/', (req, res) => {
     fs.readFile(notificationPath, (err, data) => {

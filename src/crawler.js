@@ -1,9 +1,9 @@
 const fs = require('fs');
 const cron = require('node-cron');
-const utils = require('./src/utils')
+const utils = require('./utils')
 
-var filePath = __dirname + '/lastCars.json';
-var notificationPath = __dirname + '/notifications.json';
+var filePath = __dirname + '/../lastCars.json';
+var notificationPath = __dirname + '/../notifications.json';
 
 function startCrawler() {
     let $params = {
