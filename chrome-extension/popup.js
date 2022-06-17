@@ -4,7 +4,7 @@ function startCron(event) {
     chrome.action.setBadgeText({text: 'START'});
     chrome.alarms.create('startCron', {when: Date.now()});
 
-    window.close();
+    //window.close();
 }
 
 function stopCron(event) {
