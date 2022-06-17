@@ -9,7 +9,7 @@ const fetchNotifications = () => {
     fetch('http://localhost:3000/')           //api for the get request
         .then(response => response.json())
         .then(messageList => {
-            console.log('messageList:', messageList)
+            console.log('messageList:', messageList,(new Date()).toLocaleTimeString())
             if (messageList.length > 0) {
                 for (const [index, message] of Object.entries(messageList)) {
                     let notifyId = 'notify_' + index;
@@ -30,10 +30,14 @@ const fetchNotifications = () => {
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === 'startCron') {
+        console.log('START CRON', (new Date()).toLocaleTimeString())
         interval = setInterval(function () {
+            console.log('interval: ',(new Date()).toLocaleTimeString())
+
             fetchNotifications();
         }, 5 * minute);
     } else {
+        console.log('STOP CRON', (new Date()).toLocaleTimeString())
         clearInterval(interval);
     }
 })
