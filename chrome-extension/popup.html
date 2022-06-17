@@ -4,22 +4,26 @@
     <title>Vava</title>
 </head>
 <body>
-<form action="" onsubmit="return false">
-<!--    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">-->
-<!--        <div style="display: flex; flex-direction: row">-->
-<!--            <input type="text" id="fromPrice" placeholder="Min Price"> - -->
-<!--            <input type="text" id="toPrice" placeholder="Max Price">-->
-<!--        </div>-->
-<!--        <div style="display: flex; flex-direction: row">-->
-<!--            <input type="text" id="fromMilage" placeholder="Min Milage"> - -->
-<!--            <input type="text" id="toMilage" placeholder="Max Milage">-->
-<!--        </div>-->
-<!--        <div style="display: flex; flex-direction: row">-->
-<!--            <input type="text" id="fromYear" placeholder="Min Year"> - -->
-<!--            <input type="text" id="toYear" placeholder="Max Year">-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <button type="button" id="saveForm">Save</button>-->
+<form action="">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+        <div style="display: flex; flex-direction: row">
+            <input type="text" id="fromPrice" placeholder="Min Price"> -
+            <input type="text" id="toPrice" placeholder="Max Price">
+        </div>
+        <div style="display: flex; flex-direction: row">
+            <input type="text" id="fromMilage" placeholder="Min Milage"> -
+            <input type="text" id="toMilage" placeholder="Max Milage">
+        </div>
+        <div style="display: flex; flex-direction: row">
+            <input type="text" id="fromYear" placeholder="Min Year"> -
+            <input type="text" id="toYear" placeholder="Max Year">
+        </div>
+        <div style="display: flex; flex-direction: row">
+            <input type="text" id="minutePeriod" placeholder="minute in period" value="5">
+            <small>5 dakikada bir çalışacak</small>
+        </div>
+    </div>
+    <button type="submit" id="saveForm">Save</button>
 </form>
 
 <script src="popup.js"></script>
