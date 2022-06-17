@@ -32,7 +32,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === 'startCron') {
         interval = setInterval(function () {
             fetchNotifications();
-        }, 1000);
+        }, 5 * minute);
     } else {
         clearInterval(interval);
     }
