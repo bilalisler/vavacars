@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vava</title>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1254">
+    <META HTTP-EQUIV="Content-language" CONTENT="tr">
+    <title>Vava Crawler Setting</title>
+    <style>
+        .button {
+            appearance: none;
+
+            border: 1px solid rgba(27, 31, 35, .15);
+            border-radius: 6px;
+            box-shadow: rgb(27 31 35 / 10%) 0 1px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            padding: 6px 16px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .danger {
+            background: #e62143;
+        }
+
+        .success {
+            background-color: #2ea44f;
+        }
+
+        body{
+            width: 150px;
+        }
+    </style>
 </head>
 <body>
-<form action="">
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
-        <div style="display: flex; flex-direction: row">
-            <input type="text" id="fromPrice" placeholder="Min Price"> -
-            <input type="text" id="toPrice" placeholder="Max Price">
-        </div>
-        <div style="display: flex; flex-direction: row">
-            <input type="text" id="fromMilage" placeholder="Min Milage"> -
-            <input type="text" id="toMilage" placeholder="Max Milage">
-        </div>
-        <div style="display: flex; flex-direction: row">
-            <input type="text" id="fromYear" placeholder="Min Year"> -
-            <input type="text" id="toYear" placeholder="Max Year">
-        </div>
-        <div style="display: flex; flex-direction: row">
-            <input type="text" id="minutePeriod" placeholder="minute in period" value="5">
-            <small>5 dakikada bir Ã§alÄ±ÅŸacak</small>
-        </div>
-    </div>
-    <button type="submit" id="saveForm">Save</button>
-</form>
+<p>
+    5 dakikalık periyotlar halinde çalışır
+</p>
+<button type="submit" class="button success" id="startCron">Start</button>
+<button type="submit" class="button danger" id="stopCron">Stop</button>
 
 <script src="popup.js"></script>
 </body>

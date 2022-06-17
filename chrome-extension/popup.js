@@ -1,20 +1,53 @@
 'use strict';
 
-function saveForm(event) {
-    console.log('event:', event)
+var notifyListById = {}
+let second = 1000;
+let minute = second * 60;
+var interval;
 
-    chrome.action.setBadgeText({text: 'ON'});
-    chrome.alarms.create('testAlarm',{delayInMinutes: 1});
+const fetchNotifications = () => {
+    fetch('http://localhost:3000/')           //api for the get request
+        .then(response => response.json())
+        .then(messageList => {
+            console.log('messageList:', messageList)
+            if (messageList.length > 0) {
+                for (const [index, message] of Object.entries(messageList)) {
+                    let notifyId = 'notify_' + index;
 
-    chrome.storage.sync.set({minutePeriod: document.getElementById('minutePeriod').value});
-    chrome.storage.sync.set({fromPrice: document.getElementById('fromPrice').value});
-    chrome.storage.sync.set({toPrice: document.getElementById('toPrice').value});
-    chrome.storage.sync.set({fromMilage: document.getElementById('fromMilage').value});
-    chrome.storage.sync.set({toMilage: document.getElementById('toMilage').value});
-    chrome.storage.sync.set({fromYear: document.getElementById('fromYear').value});
-    chrome.storage.sync.set({toYear: document.getElementById('toYear').value});
+                    notifyListById[notifyId] = message.link;
 
-   // window.close();
+                    chrome.notifications.create(notifyId, {
+                        type: 'basic',
+                        iconUrl: 'images/icon48.png',
+                        title: message.title,
+                        message: message.link,
+                        priority: 0
+                    });
+                }
+            }
+        });
 }
 
-document.getElementById('saveForm').addEventListener('click', saveForm);
+function startCron(event) {
+    chrome.action.setBadgeText({text: 'START'});
+    interval = setInterval(function () {
+        console.log('Start Interval');
+        fetchNotifications();
+    }, 5 * minute);
+    window.close();
+}
+
+function stopCron(event) {
+    chrome.action.setBadgeText({text: 'STOP'});
+    clearInterval(interval);
+    window.close();
+}
+
+chrome.notifications.onClicked.addListener((notifyId) => { // bildirim'e tıklandığında
+    let carLink = notifyListById[notifyId];
+    chrome.tabs.create({url: carLink});
+})
+
+
+document.getElementById('startCron').addEventListener('click', startCron);
+document.getElementById('stopCron').addEventListener('click', stopCron);
