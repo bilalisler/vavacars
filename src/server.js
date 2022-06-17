@@ -11,7 +11,9 @@ app.get('/', (req, res) => {
             console.error(err, 'file read error');
         } else {
             var notificationList = JSON.parse(data.length === 0 ? '[]' : data);
-            res.send(JSON.stringify(notificationList))
+
+            res.setHeader('Content-Type', 'application/json');
+            res.json(notificationList)
         }
     });
 
