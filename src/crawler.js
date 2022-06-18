@@ -6,13 +6,14 @@ var filePath = __dirname + '/../lastCars.json';
 var notificationPath = __dirname + '/../notifications.json';
 
 function startCrawler() {
+    console.log('crawling...', (new Date()).toLocaleString());
     let $params = {
         "pageNum": 1,
         "pageSize": 20,
         "filters": {
-            "priceTo": 850000,
-            "mileageTo": 40000,
-            "yearFrom": 2018,
+            "priceTo": 880000,
+            "mileageTo": 60000,
+            "yearFrom": 2017,
             "transmission": ["Otomatik"],
             "fuelType": [],
             "driveType": [],
@@ -83,10 +84,8 @@ function startCrawler() {
     });
 }
 
-console.log('crawling started at ...', (new Date()).toLocaleString());
 startCrawler();
 cron.schedule('*/5 * * * *', function () {
-    console.log('crawling...');
     startCrawler()
 });
 
