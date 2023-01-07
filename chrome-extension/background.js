@@ -1,9 +1,8 @@
 var notifyListById = {}
 let second = 1000;
 let minute = second * 60;
+var trigger_time = 3 * minute;
 var interval;
-var trigger_time = 5;
-
 const fetchNotifications = () => {
     fetch('http://localhost:3000/')           //api for the get request
         .then(response => response.json())
@@ -35,11 +34,12 @@ const fetchNotifications = () => {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === 'startCron') {
         console.log('START CRON', (new Date()).toLocaleTimeString())
+        fetchNotifications();
         interval = setInterval(function () {
             console.log('interval: ', (new Date()).toLocaleTimeString())
 
             fetchNotifications();
-        }, trigger_time * minute);
+        }, trigger_time);
     } else {
         console.log('STOP CRON', (new Date()).toLocaleTimeString())
         clearInterval(interval);

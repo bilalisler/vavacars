@@ -12,11 +12,10 @@ function startCrawler() {
         "pageNum": 1,
         "pageSize": 20,
         "filters": {
-            "priceTo": 350000,
-            "mileageTo": 600000,
+            "priceTo": 400000,
             "yearFrom": 2013,
             "transmission": [],
-            "fuelType": [],
+            "fuelType": ["Dizel"],
             "driveType": [],
             "bodyType": [],
             "doorCount": [],
