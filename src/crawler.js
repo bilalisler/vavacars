@@ -3,7 +3,7 @@ const cron = require('node-cron');
 const utils = require('./utils')
 const {trigger_time} = require('./../config')
 
-var filePath = __dirname + '/../lastCars.json';
+var lastCarsFilePath = __dirname + '/../lastCars.json';
 var notificationPath = __dirname + '/../notifications.json';
 
 function startCrawler() {
@@ -30,7 +30,7 @@ function startCrawler() {
         }
     }
 
-    fs.readFile(filePath, (err, data) => {
+    fs.readFile(lastCarsFilePath, (err, data) => {
         if (err) {
             console.error(err, 'file read error');
         } else {
@@ -42,7 +42,7 @@ function startCrawler() {
                 carStatusMap[item.id] = item.status;
             }
 
-            fs.writeFile(filePath, JSON.stringify([]), {flag: 'w'}, (err) => {
+            fs.writeFile(lastCarsFilePath, JSON.stringify([]), {flag: 'w'}, (err) => {
                 if (err)
                     console.log(err, 'write file error1');
             }); // sıfırla
@@ -69,14 +69,16 @@ function startCrawler() {
                         notificationList = notificationList.concat([{'link': $link, 'title': 'yeni'}]);
                     }
 
-                    fs.writeFileSync(notificationPath, JSON.stringify(notificationList), {flag: 'w'}, (err) => {
-                        if (err)
-                            console.log(err, 'write file error2');
-                    });
+                    if (notificationList.length > 0) {
+                        fs.writeFileSync(notificationPath, JSON.stringify(notificationList), {flag: 'w'}, (err) => {
+                            if (err)
+                                console.log(err, 'write file error2');
+                        });
+                    }
                 }
 
                 carList = carList.concat(newCarList);
-                fs.writeFileSync(filePath, JSON.stringify(carList), {flag: 'w'}, (err) => {
+                fs.writeFileSync(lastCarsFilePath, JSON.stringify(carList), {flag: 'w'}, (err) => {
                     if (err)
                         console.log(err, 'write file error2');
                 });
