@@ -1,6 +1,7 @@
 const fs = require('fs');
 const cron = require('node-cron');
 const utils = require('./utils')
+const {trigger_time} = require('./../config')
 
 var filePath = __dirname + '/../lastCars.json';
 var notificationPath = __dirname + '/../notifications.json';
@@ -11,13 +12,13 @@ function startCrawler() {
         "pageNum": 1,
         "pageSize": 20,
         "filters": {
-            "priceTo": 880000,
-            "mileageTo": 60000,
-            "yearFrom": 2017,
-            "transmission": ["Otomatik"],
+            "priceTo": 350000,
+            "mileageTo": 600000,
+            "yearFrom": 2013,
+            "transmission": [],
             "fuelType": [],
             "driveType": [],
-            "bodyType": ["Crossover", "SUV"],
+            "bodyType": [],
             "doorCount": [],
             "seatingCapacity": [],
             "carFeaturesCodes": [],
@@ -85,7 +86,7 @@ function startCrawler() {
 }
 
 startCrawler();
-cron.schedule('*/5 * * * *', function () {
+cron.schedule('*/' + trigger_time + ' * * * *', function () {
     startCrawler()
 });
 
